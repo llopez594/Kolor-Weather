@@ -8,6 +8,8 @@
     <string name="text_precip">PRECIP</string>
     <string name="text_daily_weather">DAILY WEATHER</string>
     <string name="text_hourly_weather">HOURLY WEATHER</string>
-    <string name="language">lang=es</string>
-    <string name="units">units=si</string>
+    <string name="language">es</string>
+    <string name="units">si</string>
+    <string name="error_network">NETWORK ERROR</string>
+    <string name="retry">RETRY?</string>
 </resources>

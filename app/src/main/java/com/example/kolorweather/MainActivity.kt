@@ -8,6 +8,7 @@ import Model.JSONParser
 import android.annotation.SuppressLint
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.content.res.ResourcesCompat
 import android.util.Log
 import com.android.volley.Request
@@ -25,25 +26,39 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val latitud  = 8.3512200
-        val longitud = -62.6410200
-        val language = R.string.language
-        val units    = R.string.units
+        tempTextView.text = getString(R.string.grade_default, 0.0)
+        precipTextView.text = getString(R.string.percentage_humidity_default, 0.0)
 
-        val URL = "$DARK_SKY_URL/$API_KEY/$latitud,$longitud?$language&$units"
+        getWeather()
+    }
+
+    private fun getWeather() {
+        val latitud = 8.3512200
+        val longitud = -62.6410200
+        val language = getString(R.string.language)
+        val units = getString(R.string.units)
+
+        val URL = "$DARK_SKY_URL/$API_KEY/$latitud,$longitud?lang=$language&units=$units"
         //Log.d(TAG, URL)
 
-        val queue = Volley.newRequestQueue (this)
-        val stringRequest = StringRequest (Request.Method.GET, URL,
-            Response.Listener <String> { response ->
+        val queue = Volley.newRequestQueue(this)
+        val stringRequest = StringRequest(Request.Method.GET, URL,
+            Response.Listener<String> { response ->
                 //val responseJSON = JSONObject(response)
                 val currentWeather = JsonParser.getCurrentWeatherFromJson(JSONObject(response))
                 buildCurrentWeatherUI(currentWeather, JsonParser.TimeZone)
             },
             Response.ErrorListener {
                 //Log.d(TAG, " ¡Eso no funcionó! ")
+                displayErrorMessage()
             })
-        queue.add (stringRequest)
+        queue.add(stringRequest)
+    }
+
+    private fun displayErrorMessage() {
+        val snackbar = Snackbar.make(main, R.string.error_network, Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.retry, { getWeather() })
+        snackbar.show()
     }
 
     private fun buildCurrentWeatherUI(currentWeather: CurrentWeather, timezone: String) {
