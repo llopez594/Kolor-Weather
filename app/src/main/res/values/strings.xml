@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Kolor Weather</string>
+    <string name="City">Alcatraz, California</string>
+    <string name="Date_weather">No Data</string>
+    <string name="grade_default">%.1f C</string>
+    <string name="percentage_humidity_default">%.1f %%</string>
+    <string name="text_temp">TEMP</string>
+    <string name="text_precip">PRECIP</string>
+    <string name="text_daily_weather">DAILY WEATHER</string>
+    <string name="text_hourly_weather">HOURLY WEATHER</string>
+    <string name="language">lang=es</string>
+    <string name="units">units=si</string>
+</resources>
