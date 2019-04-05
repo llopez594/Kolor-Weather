@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.res.ResourcesCompat
 import android.util.Log
+import android.view.View
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -39,7 +40,6 @@ class MainActivity : AppCompatActivity() {
         val units = getString(R.string.units)
 
         val URL = "$DARK_SKY_URL/$API_KEY/$latitud,$longitud?lang=$language&units=$units"
-        //Log.d(TAG, URL)
 
         val queue = Volley.newRequestQueue(this)
         val stringRequest = StringRequest(Request.Method.GET, URL,
@@ -74,6 +74,14 @@ class MainActivity : AppCompatActivity() {
                                             null))
            locazationTextView.text = timezone.replace("/", ", ")
        }
+
+    }
+
+    fun startHourlyActivity(view: View){
+
+    }
+
+    fun startDailyActivity(){
 
     }
 
