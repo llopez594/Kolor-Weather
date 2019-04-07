@@ -12,4 +12,5 @@
     <string name="units">si</string>
     <string name="error_network">NETWORK ERROR</string>
     <string name="retry">RETRY?</string>
+    <string name="summary_of_the_week">Summary of the week</string>
 </resources>

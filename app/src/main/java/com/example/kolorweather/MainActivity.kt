@@ -1,17 +1,16 @@
 
 package com.example.kolorweather
 
-import Model.API_KEY
-import Model.CurrentWeather
-import Model.DARK_SKY_URL
-import Model.JSONParser
+import Model.*
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.res.ResourcesCompat
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -23,6 +22,11 @@ class MainActivity : AppCompatActivity() {
 
     val TAG = MainActivity::class.java.simpleName
     val JsonParser = JSONParser()
+    lateinit var days:ArrayList<Day>
+
+    companion object {
+        val DAILY_WEATHER = "DAILY_WEATHER"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -44,8 +48,12 @@ class MainActivity : AppCompatActivity() {
         val queue = Volley.newRequestQueue(this)
         val stringRequest = StringRequest(Request.Method.GET, URL,
             Response.Listener<String> { response ->
-                //val responseJSON = JSONObject(response)
-                val currentWeather = JsonParser.getCurrentWeatherFromJson(JSONObject(response))
+                val responseJSON = JSONObject(response)
+
+                val currentWeather = JsonParser.getCurrentWeatherFromJson(responseJSON)
+
+                days = JsonParser.getCurrentDailyWeatherFromJson(responseJSON)
+
                 buildCurrentWeatherUI(currentWeather, JsonParser.TimeZone)
             },
             Response.ErrorListener {
@@ -79,10 +87,17 @@ class MainActivity : AppCompatActivity() {
 
     fun startHourlyActivity(view: View){
 
+        val intent = Intent()
+        intent.setClass(this, HourlyWeatherActivity::class.java)
+        startActivity(intent)
     }
 
-    fun startDailyActivity(){
-
+    fun startDailyActivity(view: View){
+        val intent = Intent(this, DailyWeatherActivity::class.java).apply {
+            putParcelableArrayListExtra(DAILY_WEATHER, days)
+        }
+        //intent.putParcelableArrayListExtra("DAILY_WEATHER", days)
+        startActivity(intent)
     }
 
 }
