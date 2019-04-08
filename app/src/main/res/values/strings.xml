@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Kolor Weather</string>
     <string name="City">Alcatraz, California</string>
-    <string name="Date_weather">No Data</string>
+    <string name="No_data">No Data</string>
     <string name="grade_default">%.1f °C</string>
     <string name="percentage_humidity_default">%.1f %%</string>
     <string name="text_temp">TEMP</string>
@@ -13,4 +13,5 @@
     <string name="error_network">NETWORK ERROR</string>
     <string name="retry">RETRY?</string>
     <string name="summary_of_the_week">Summary of the week</string>
+    <string name="summary_of_the_day">Summary of the day</string>
 </resources>

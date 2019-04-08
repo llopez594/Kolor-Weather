@@ -19,7 +19,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="ContentDescription" android:layout_marginBottom="120dp"/>
     <TextView
-            android:text="@string/Date_weather"
+            android:text="@string/No_data"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"

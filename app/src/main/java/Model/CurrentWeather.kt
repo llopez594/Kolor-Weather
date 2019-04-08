@@ -2,7 +2,9 @@ package Model
 
 import com.example.kolorweather.R
 
-class CurrentWeather(var icon:String, var summary:String, var temp:Double, var precip:Double) {
+//data antes del class nos modifica la clase a una clase de datos, en ves de
+//crear un metodo toString() usamos el data class directamente
+data class CurrentWeather(var icon:String, var summary:String, var temp:Double, var precip:Double) {
 
     fun getIconResource():Int{
         when(icon){

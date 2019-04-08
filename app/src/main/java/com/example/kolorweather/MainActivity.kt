@@ -1,16 +1,15 @@
 
 package com.example.kolorweather
 
+import Extensions.action
+import Extensions.displaySnack
 import Model.*
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.res.ResourcesCompat
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -21,11 +20,17 @@ import org.json.JSONObject
 class MainActivity : AppCompatActivity() {
 
     val TAG = MainActivity::class.java.simpleName
-    val JsonParser = JSONParser()
-    lateinit var days:ArrayList<Day>
+    //lateinit var days:ArrayList<Day> //lateinit permite definir una variable despues para evitar que sea null
+    var days:ArrayList<Day> = ArrayList()
 
+    var hours:ArrayList<Hour> = ArrayList()
+
+    //en vez de usar public static final String variable, ya que kotlin no tiene variables
+    //estaticas usamos companion object y definimoz variables sin instancearlas
     companion object {
         val DAILY_WEATHER = "DAILY_WEATHER"
+
+        val HOURLY_WEATHER = "HOURLY_WEATHER"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,14 +52,17 @@ class MainActivity : AppCompatActivity() {
 
         val queue = Volley.newRequestQueue(this)
         val stringRequest = StringRequest(Request.Method.GET, URL,
-            Response.Listener<String> { response ->
-                val responseJSON = JSONObject(response)
+            Response.Listener<String> { //response -> val responseJSON = JSONObject(response)
 
-                val currentWeather = JsonParser.getCurrentWeatherFromJson(responseJSON)
+                val responseJSON = JSONObject(it)
 
-                days = JsonParser.getCurrentDailyWeatherFromJson(responseJSON)
+                val currentWeather = getCurrentWeatherFromJSON(responseJSON)
 
-                buildCurrentWeatherUI(currentWeather, JsonParser.TimeZone)
+                days = getCurrentDailyWeatherFromJSON(responseJSON)
+
+                hours = getHourlyWeatherFromJSON(responseJSON)
+
+                buildCurrentWeatherUI(currentWeather, TimeZone)
             },
             Response.ErrorListener {
                 //Log.d(TAG, " ¡Eso no funcionó! ")
@@ -64,15 +72,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun displayErrorMessage() {
-        val snackbar = Snackbar.make(main, R.string.error_network, Snackbar.LENGTH_INDEFINITE)
+        //se puede llamar a un metodo con la forma lambda
+        main.displaySnack(getString(R.string.error_network), Snackbar.LENGTH_INDEFINITE){
+            action(getString(R.string.retry)){ getWeather() }
+        }
+        /*val snackbar = Snackbar.make(main, R.string.error_network, Snackbar.LENGTH_INDEFINITE)
             .setAction(R.string.retry, { getWeather() })
-        snackbar.show()
+        snackbar.show()*/
+
     }
 
     private fun buildCurrentWeatherUI(currentWeather: CurrentWeather, timezone: String) {
        with(currentWeather){
            //tempTextView.text = "$temp °C"
            //precipTextView.text = "$precip %"
+
+           //se puede cargar el recurso STRING en tiempo de ejecucion.
            tempTextView.text = getString(R.string.grade_default, temp)
            precipTextView.text = getString(R.string.percentage_humidity_default, precip*100)
 
@@ -85,13 +100,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    //utilizar .apply nos ayuda a modificar un atributo sin usar .setText()
     fun startHourlyActivity(view: View){
-
         val intent = Intent()
-        intent.setClass(this, HourlyWeatherActivity::class.java)
+        intent.setClass(this, HourlyWeatherActivity::class.java).apply {
+            putParcelableArrayListExtra(HOURLY_WEATHER, hours)
+        }
         startActivity(intent)
     }
 
+    //utilizar .apply nos ayuda a modificar un atributo sin usar .setText()
     fun startDailyActivity(view: View){
         val intent = Intent(this, DailyWeatherActivity::class.java).apply {
             putParcelableArrayListExtra(DAILY_WEATHER, days)

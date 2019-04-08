@@ -1,5 +1,7 @@
 package Model
 
+//los file en kotlin pueden ser visibles en todo el proyecto
+
 val currently         = "currently"
 val temperature       = "temperature"
 val precipProbability = "precipProbability"
